@@ -1790,15 +1790,14 @@ class View(utils.SubjectMixin):
         t = self.text_note
         # the last group matches [[bla bla]] inter-note links
         pat = \
-        r"\b((https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]*[A-Za-z0-9+&@#/%=~_|])|(\[\[[^][]*\]\])"
+        r"\b((https?|ftp|file)://[-\w+&@#/%?=~|!:,.;]*[\w+&@#/%=~|])|(\[\[[^][]*\]\])"
 
         # remove all existing tags
         for tag in self.text_tags_links:
             t.tag_remove(tag, '1.0', 'end')
 
         del self.text_tags_links[:]
-
-        for mo in re.finditer(pat, t.get('1.0', 'end')):
+        for mo in re.finditer(pat, t.get('1.0', 'end'), re.U):
             # extract the link from the match object
             if mo.groups()[2] is not None:
                 link = mo.groups()[2]
