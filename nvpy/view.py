@@ -1,3 +1,4 @@
+# encoding: utf8
 # nvPY: cross-platform note-taking app with simplenote syncing
 # copyright 2012 by Charl P. Botha <cpbotha@vxlabs.com>
 # new BSD license
@@ -1129,8 +1130,23 @@ class View(utils.SubjectMixin):
         self.text_note.bind("<Escape>", lambda e: self.notes_list.text.focus())
         self.text_note.bind("<Control-bracketleft>", lambda e: self.notes_list.text.focus())
         # <Key>
-
+        
+        self.text_note.bind("<Control-X>", self.cmd_cut)
+        self.text_note.bind("<Control-division>", self.cmd_cut)
+        self.text_note.bind("<Control-multiply>", self.cmd_cut)
+        
+        self.text_note.bind("<Control-C>", self.cmd_copy)
+        self.text_note.bind("<Control-ntilde>", self.cmd_copy)
+        self.text_note.bind("<Control-Ntilde>", self.cmd_copy)
+        
+        self.text_note.bind("<Control-V>", self.cmd_paste)
+        self.text_note.bind("<Control-igrave>", self.cmd_paste)
+        self.text_note.bind("<Control-Igrave>", self.cmd_paste)
+        
         self.text_note.bind("<Control-a>", self.cmd_select_all)
+        self.text_note.bind("<Control-A>", self.cmd_select_all)
+        self.text_note.bind("<Control-ocircumflex>", self.cmd_select_all)
+        self.text_note.bind("<Control-Ocircumflex>", self.cmd_select_all)
 
         self.tags_entry.bind("<Return>", self.handler_add_tags_to_selected_note)
         self.tags_entry.bind("<Escape>", lambda e: self.text_note.focus())
@@ -1156,6 +1172,9 @@ class View(utils.SubjectMixin):
         file_menu.add_command(label="New note", underline=0,
                               command=self.cmd_root_new, accelerator="Ctrl+N")
         self.root.bind_all("<Control-n>", self.cmd_root_new)
+        self.root.bind_all("<Control-N>", self.cmd_root_new)
+        self.root.bind_all("<Control-ograve>", self.cmd_root_new)
+        self.root.bind_all("<Control-Ograve>", self.cmd_root_new)
 
         file_menu.add_command(label="Delete note", underline=0,
                               command=self.cmd_root_delete, accelerator="Ctrl+D")
@@ -1169,7 +1188,10 @@ class View(utils.SubjectMixin):
                 underline=0, command=self.cmd_sync_current_note,
                 accelerator="Ctrl+S")
         self.root.bind_all("<Control-s>", self.cmd_sync_current_note)
-
+        self.root.bind_all("<Control-S>", self.cmd_sync_current_note)
+        self.root.bind_all("<Control-ucircumflex>", self.cmd_sync_current_note)
+        self.root.bind_all("<Control-Ucircumflex>", self.cmd_sync_current_note)
+        
         file_menu.add_separator()
 
         file_menu.add_command(label="Render Markdown to HTML", underline=7,
@@ -1191,6 +1213,9 @@ class View(utils.SubjectMixin):
         file_menu.add_command(label="Exit", underline=1,
                               command=self.handler_close, accelerator="Ctrl+Q")
         self.root.bind_all("<Control-q>", self.handler_close)
+        self.root.bind_all("<Control-Q>", self.handler_close)
+        self.root.bind_all("<Control-eacute>", self.handler_close)
+        self.root.bind_all("<Control-Eacute>", self.handler_close)
 
         # EDIT ##########################################################
         edit_menu = tk.Menu(menu, tearoff=False)
@@ -1199,22 +1224,32 @@ class View(utils.SubjectMixin):
         edit_menu.add_command(label="Undo", accelerator="Ctrl+Z",
                               underline=0, command=lambda: self.text_note.edit_undo())
         self.root.bind_all("<Control-z>", lambda e: self.text_note.edit_undo())
-
+        self.root.bind_all("<Control-Z>", lambda e: self.text_note.edit_undo())
+        self.root.bind_all("<Control-ydiaeresis>", lambda e: self.text_note.edit_undo())
+        self.root.bind_all("<Control-ssharp>", lambda e: self.text_note.edit_undo())
+        
         edit_menu.add_command(label="Redo", accelerator="Ctrl+Y",
                               underline=0, command=lambda: self.text_note.edit_redo())
         self.root.bind_all("<Control-y>", lambda e: self.text_note.edit_redo())
-
+        self.root.bind_all("<Control-Y>", lambda e: self.text_note.edit_redo())
+        self.root.bind_all("<Control-iacute>", lambda e: self.text_note.edit_redo())
+        self.root.bind_all("<Control-Iacute>", lambda e: self.text_note.edit_redo())
+                
+        
         edit_menu.add_separator()
 
         edit_menu.add_command(label="Cut", accelerator="Ctrl+X",
                               underline=2, command=self.cmd_cut)
+        
         edit_menu.add_command(label="Copy", accelerator="Ctrl+C",
                               underline=0, command=self.cmd_copy)
+        
         edit_menu.add_command(label="Paste", accelerator="Ctrl+V",
                               underline=0, command=self.cmd_paste)
 
         edit_menu.add_command(label="Select All", accelerator="Ctrl+A",
                               underline=7, command=self.cmd_select_all)
+
         # FIXME: ctrl-a is usually bound to start-of-line. What's a
         # better binding for select all then?
 
@@ -1223,6 +1258,9 @@ class View(utils.SubjectMixin):
         edit_menu.add_command(label="Find", accelerator="Ctrl+F",
                               underline=0, command=lambda: self.search_entry.focus())
         self.root.bind_all("<Control-f>", self.search)
+        self.root.bind_all("<Control-F>", self.search)
+        self.root.bind_all("<Control-agrave>", self.search)
+        self.root.bind_all("<Control-Agrave>", self.search)
 
         # TOOLS ########################################################
         tools_menu = tk.Menu(menu, tearoff=False)
@@ -1506,16 +1544,16 @@ class View(utils.SubjectMixin):
         """
         self.root.destroy()
 
-    def cmd_cut(self):
+    def cmd_cut(self, event=None):
         self.text_note.event_generate('<<Cut>>')
 
-    def cmd_copy(self):
+    def cmd_copy(self, event=None):
         self.text_note.event_generate('<<Copy>>')
 
     def cmd_markdown(self, event=None):
         self.notify_observers('command:markdown', None)
 
-    def cmd_paste(self):
+    def cmd_paste(self, event=None):
         self.text_note.event_generate('<<Paste>>')
 
     def cmd_help_about(self):
