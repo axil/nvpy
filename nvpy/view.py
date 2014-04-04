@@ -941,13 +941,17 @@ class View(utils.SubjectMixin):
         #self.root.configure(background="#b2b2b2")
 
         # with iconphoto we have to use gif, also on windows
-        icon_fn = 'nvpy.gif'
+        icon_fn = 'nvpy.ico'
 
         iconpath = os.path.join(
             self.config.app_dir, 'icons', icon_fn)
-
-        self.icon = tk.PhotoImage(file=iconpath)
-        self.root.tk.call('wm', 'iconphoto', self.root._w, self.icon)
+#
+#        from PIL import Image, ImageTk
+#        image = Image.open(iconpath)
+##        self.icon = tk.PhotoImage(file=iconpath)
+#        self.icon = ImageTk.PhotoImage(image)
+#        self.root.tk.call('wm', 'iconphoto', self.root._w, self.icon)
+        self.root.iconbitmap(iconpath)
 
         # create menu ###################################################
         self._create_menu()
