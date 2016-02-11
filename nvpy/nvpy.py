@@ -255,9 +255,9 @@ class Controller:
         self.notes_db.add_observer('synced:note', self.observer_notes_db_synced_note)
         self.notes_db.add_observer('change:note-status', self.observer_notes_db_change_note_status)
 
-        if self.config.simplenote_sync:
-            self.notes_db.add_observer('progress:sync_full', self.observer_notes_db_sync_full)
-            self.sync_full()
+#        if self.config.simplenote_sync:
+#            self.notes_db.add_observer('progress:sync_full', self.observer_notes_db_sync_full)
+#            self.sync_full()
 
         # we want to be notified when the user does stuff
         self.view.add_observer('click:notelink',
