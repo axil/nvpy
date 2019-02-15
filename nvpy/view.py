@@ -509,6 +509,7 @@ class NotesList(tk.Frame):
         title = utils.get_note_title(note)
         tags = note.get('tags')
         modifydate = float(note.get('modifydate'))
+
         pinned = utils.note_pinned(note)
         createdate = float(note.get('createdate'))
         self.note_headers.append((title, tags, modifydate, pinned, createdate))
@@ -1200,6 +1201,7 @@ class View(utils.SubjectMixin):
         self.search_entry.bind("<Down>", lambda e: self.notes_list.select_next(silent=False))
         self.search_entry.bind("<Control-j>", lambda e: self.notes_list.select_next(silent=False))
         self.search_entry.bind("<Next>", lambda e: self.notes_list.select_next(silent=False, delta=10))
+        self.search_entry.bind("<Control-BackSpace>", self.delete_word_search_entry)
 
         self.text_note.bind("<<Change>>", self.handler_text_change)
 
@@ -1227,6 +1229,8 @@ class View(utils.SubjectMixin):
         self.text_note.bind("<Control-A>", self.cmd_select_all)
         self.text_note.bind("<Control-ocircumflex>", self.cmd_select_all)
         self.text_note.bind("<Control-Ocircumflex>", self.cmd_select_all)
+        
+        self.text_note.bind("<Control-BackSpace>", self.delete_word_text_note)
 
         self.tags_entry.bind("<Return>", self.handler_add_tags_to_selected_note)
         self.tags_entry.bind("<Escape>", lambda e: self.text_note.focus())
@@ -1344,6 +1348,7 @@ class View(utils.SubjectMixin):
         self.root.bind_all("<Control-F>", self.search)
         self.root.bind_all("<Control-agrave>", self.search)
         self.root.bind_all("<Control-Agrave>", self.search)
+        
 
         # NOTES ########################################################
         notes_menu = tk.Menu(menu, tearoff=False)
@@ -1872,6 +1877,28 @@ class View(utils.SubjectMixin):
 
             # mo.start(), mo.end() or mo.span() in one go
             t.tag_add(tag, '1.0+%dc' % (mo.start(), ), '1.0+%dc' % (mo.end(), ))
+
+    def delete_word_text_note(self, e):
+        cursor_pos = self.text_note.index(tk.INSERT)
+        t = self.text_note
+        parts = cursor_pos.split('.')
+        line_start = parts[0] + '.0'
+        z = t.get(line_start, cursor_pos)
+        m = re.search('\w*\W*$', z, re.U)
+        if m:        
+            t.delete(parts[0] + '.%d' % m.start(), cursor_pos)
+            #self.show_info('Word Count', 'hello world! %s' % m.start())
+        return 'break'
+
+    def delete_word_search_entry(self, e):
+        cursor_pos = self.search_entry.index(tk.INSERT)
+        t = self.search_entry
+        z = t.get()
+        m = re.search('\w*\W*$', z[:cursor_pos], re.U)
+        if m:        
+            t.delete(m.start(), cursor_pos)
+            #self.show_info('Word Count', 'hello world! %s' % m.start())
+        return 'break'
 
     def activate_markdown_highlighting(self):
         t = self.text_note
