@@ -2,6 +2,7 @@ import sys
 import functools
 import pdb
 import threading
+from traceback import print_exc
 
 lock = threading.Lock()
 
@@ -13,6 +14,7 @@ def wrap_buggy_function(fn):
         try:
             return fn(*args, **kwargs)
         except Exception as e:
+            print_exc()
             with lock:
                 tb = sys.exc_info()[2]
                 pdb.post_mortem(tb)
