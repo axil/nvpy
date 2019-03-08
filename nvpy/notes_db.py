@@ -442,7 +442,14 @@ class NotesDB(utils.SubjectMixin):
             return o
 
         n = self.notes[key]
-        modifydate = float(n['modifydate'])
+        try:
+            modifydate = float(n['modifydate'])
+        except:
+#            modify
+#            print(n)
+#            import sys
+#            sys.exit(1)
+            modifydate = n['modifydate'] = float(n['modificationDate'])
         savedate = float(n['savedate'])
 
         if savedate > modifydate:

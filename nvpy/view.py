@@ -454,10 +454,20 @@ class NotesList(tk.Frame):
 
         title = utils.get_note_title(note)
         tags = note.get('tags')
-        modifydate = float(note.get('modifydate'))
+        try:
+            modifydate = float(note.get('modifydate'))
+        except:
+            modifydate = float(note.get('modificationDate'))
+#            print('__________' + repr(note))
+#            import sys
+#            sys.exit(1)
+#            print('__________' + repr(title) + '_________' + repr(note.get('modifydate')))
 
         pinned = utils.note_pinned(note)
-        createdate = float(note.get('createdate'))
+        try:
+            createdate = float(note.get('createdate'))
+        except:
+            createdate = float(note.get('creationDate'))
         self.note_headers.append((title, tags, modifydate, pinned, createdate))
 
         self.enable_text()
