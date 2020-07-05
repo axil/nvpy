@@ -1847,9 +1847,9 @@ class View(utils.SubjectMixin):
 
         # first just use our standard regular expression for finding the first
         # non whitespace line, wherever it is:
-        mo = utils.note_title_re.match(content)
-        if mo:
-            t.tag_add('md-bold', '1.0+{0}c'.format(mo.start()), '1.0+{0}c'.format(mo.end()))
+#        mo = utils.note_title_re.match(content)
+#        if mo:
+#            t.tag_add('md-bold', '1.0+{0}c'.format(mo.start()), '1.0+{0}c'.format(mo.end()))
 
         # then do headings
         pat = re.compile(r"^#.*$", re.MULTILINE)
