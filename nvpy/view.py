@@ -1171,6 +1171,20 @@ class View(utils.SubjectMixin):
     def set_search_entry_text(self, text):
         self.search_entry_var.set(text)
 
+    def ctrl_keypress(self, e):
+        if e.keycode == 86 and e.keysym != 'v':
+            self.cmd_paste()
+        elif e.keycode == 67 and e.keysym != 'c':
+            self.cmd_copy()
+        elif e.keycode == 88 and e.keysym != 'x':
+            self.cmd_cut()
+        elif e.keycode == 90 and e.keysym != 'z':
+            self.text_note.edit_undo()
+        elif e.keycode == 89 and e.keysym != 'y':
+            self.text_note.edit_redo()
+        elif e.keycode == 65 and e.keysym != 'a':
+            self.cmd_select_all()
+
     def _bind_events(self):
         # make sure window close also goes through our handler
         self.root.protocol('WM_DELETE_WINDOW', self.handler_close)
@@ -1224,6 +1238,7 @@ class View(utils.SubjectMixin):
         self.text_note.bind("<Control-V>", self.cmd_paste)
         self.text_note.bind("<Control-igrave>", self.cmd_paste)
         self.text_note.bind("<Control-Igrave>", self.cmd_paste)
+        self.text_note.bind("<Control-KeyPress>", self.ctrl_keypress)
         
         self.text_note.bind("<Control-a>", self.cmd_select_all)
         self.text_note.bind("<Control-A>", self.cmd_select_all)
